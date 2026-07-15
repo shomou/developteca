@@ -1,0 +1,17 @@
+# --- Núcleo web ---
+Flask==2.3.3               # El framework web. Nuestro "Spring" de Python.
+Flask-SQLAlchemy==3.0.5    # Integra SQLAlchemy (el ORM) con Flask. ORM = como JPA/Hibernate.
+Flask-Migrate==4.0.4       # Migraciones de BD con Alembic. Como Flyway/Liquibase en Java.
+Flask-Login==0.6.2         # Manejo de sesiones de usuario (login/logout).
+
+# --- Base de datos ---
+psycopg2-binary==2.9.7     # Driver para conectar Python con PostgreSQL. El "JDBC driver".
+
+# --- Utilidades ---
+python-dotenv==1.0.0       # Carga variables desde el archivo .env (config/secretos).
+marshmallow==3.20.1        # Validación y serialización de datos (DTOs, entrada/salida).
+python-slugify==8.0.1      # Convierte "Mi Primer Post" -> "mi-primer-post" para URLs.
+
+# --- Testing ---
+pytest==7.4.0              # Framework de tests. El "JUnit" de Python.
+pytest-cov==4.1.0          # Mide el coverage (cobertura) de los tests.
