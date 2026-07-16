@@ -19,3 +19,5 @@ class InvalidPostError(DomainError):
 class PostAlreadyPublishedError(DomainError):
     """Se lanza cuando se intenta publicar un post que ya está publicado."""
 
+class PostNotFoundError(DomainError):
+    """Se lanza cuando no existe un post con el id solicitado."""

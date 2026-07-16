@@ -1,22 +1,8 @@
 """Tests del puerto PostRepository usando un fake en memoria."""
 import pytest
 
-from app.domain.entities import Post
 from app.domain.ports import PostRepository
 from tests.fakes import InMemoryPostRepository
-
-
-def _post(**overrides):
-    """Helper: crea un Post válido; permite sobreescribir campos."""
-    datos = {"title": "Hola mundo", "content": "Contenido", "author_id": 1}
-    datos.update(overrides)
-    return Post(**datos)
-
-
-@pytest.fixture
-def repo():
-    """Un repositorio limpio para cada test."""
-    return InMemoryPostRepository()
 
 
 def test_no_se_puede_instanciar_el_puerto():
@@ -30,13 +16,13 @@ def test_el_fake_cumple_el_contrato():
     assert isinstance(InMemoryPostRepository(), PostRepository)
 
 
-def test_guardar_asigna_id(repo):
-    post = repo.guardar(_post())
+def test_guardar_asigna_id(repo, make_post):
+    post = repo.guardar(make_post())
     assert post.id == 1
 
 
-def test_buscar_por_id_devuelve_el_post(repo):
-    guardado = repo.guardar(_post())
+def test_buscar_por_id_devuelve_el_post(repo, make_post):
+    guardado = repo.guardar(make_post())
     assert repo.buscar_por_id(guardado.id) == guardado
 
 
@@ -44,11 +30,9 @@ def test_buscar_por_id_inexistente_devuelve_none(repo):
     assert repo.buscar_por_id(999) is None
 
 
-def test_listar_publicados_solo_devuelve_publicados(repo):
-    borrador = repo.guardar(_post(title="Borrador"))
-    publicado = _post(title="Publicado")
-    publicado.publicar()
-    repo.guardar(publicado)
+def test_listar_publicados_solo_devuelve_publicados(repo, make_post, make_publicado):
+    borrador = repo.guardar(make_post(title="Borrador"))
+    publicado = make_publicado(title="Publicado")
 
     resultado = repo.listar_publicados()
 
@@ -56,7 +40,7 @@ def test_listar_publicados_solo_devuelve_publicados(repo):
     assert borrador not in resultado
 
 
-def test_eliminar_quita_el_post(repo):
-    post = repo.guardar(_post())
+def test_eliminar_quita_el_post(repo, make_post):
+    post = repo.guardar(make_post())
     repo.eliminar(post.id)
     assert repo.buscar_por_id(post.id) is None
