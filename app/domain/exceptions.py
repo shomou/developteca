@@ -21,3 +21,12 @@ class PostAlreadyPublishedError(DomainError):
 
 class PostNotFoundError(DomainError):
     """Se lanza cuando no existe un post con el id solicitado."""
+
+class InvalidUserError(DomainError):
+    """Se lanza cuando un usuario no cumple con las reglas de negocio."""
+    
+class UserNotFoundError(DomainError):
+    """Se lanza cuando no existe el usuario solicitado"""
+
+class InvalidCredentialsError(DomainError):
+    """Se lanza cuando las credenciales de acceso son incorrectas."""

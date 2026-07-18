@@ -6,8 +6,9 @@ están disponibles en cualquier test SIN necesidad de importarlas.
 """
 import pytest
 
-from app.domain.entities import Post
-from tests.fakes import InMemoryPostRepository
+from app.domain.entities import Post, User
+from app.domain.value_objects import Email
+from tests.fakes import InMemoryPostRepository,  InMemoryUserRepository, FakePasswordHasher
 
 
 @pytest.fixture
@@ -51,5 +52,34 @@ def make_publicado(repo, make_post):
         post = make_post(**overrides)
         post.publicar()
         return repo.guardar(post)
+
+    return _make
+
+@pytest.fixture
+def user_repo():
+    """Repositorio de usuarios en memoria, limpio para cada test."""
+    return InMemoryUserRepository()
+
+@pytest.fixture
+def hasher():
+    """Hasher false (rapido) para tests."""
+    return FakePasswordHasher()
+
+@pytest.fixture
+def make_user(hasher):
+    """Factory de Users válidos.
+
+    Recibe la contraseña en texto plano (la hashea con el fake hasher) y,
+    opcionalmente, el email como string vía email_str.
+    """
+
+    def _make(password="secreta123", email_str="admin@developteca.com", **overrides):
+        datos = {
+            "username": "admin",
+            "email": Email(email_str),
+            "password_hash": hasher.hash(password),
+        }
+        datos.update(overrides)
+        return User(**datos)
 
     return _make
