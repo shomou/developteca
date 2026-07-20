@@ -6,6 +6,7 @@ entorno (development/testing/production). Es el punto de ensamblaje de la app,
 equivalente a una clase @Configuration que arma el contexto en Spring.
 """
 import os
+from app.infrastructure.database import db
 from flask import Flask
 
 from app.config import config_by_name
@@ -28,6 +29,12 @@ def create_app(config_name=None):
     
     # 3. Carga la clase de configuración correspondiente al entorno.
     app.config.from_object(config_by_name[config_name])
+    
+    # Conecta SQLAlchemy con esta app.
+    db.init_app(app)
+
+    # Importa los modelos para que SQLAlchemy los registre.
+    from app.infrastructure import models  # noqa: F401
     
     # 4. Ruta temporal de prueba para confirmar que la app arranca.
     @app.route("/health")
